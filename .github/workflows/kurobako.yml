@@ -63,7 +63,7 @@ jobs:
         name: hpobench-naval-report
         path: |
           result.md
-          images/**/*
+          images/**/*.png
     - name: cml_run
       env:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
