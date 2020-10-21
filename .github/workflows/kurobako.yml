@@ -41,6 +41,8 @@ jobs:
       with:
         path: ./fcnet_tabular_benchmarks
         key: hpobench-dataset
+        restore-keys: |
+          hpobench-dataset
     - name: Download hpobench dataset
       if: steps.cache-hpobench-dataset.outputs.cache-hit != 'true'
       run: |

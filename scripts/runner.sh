@@ -38,13 +38,6 @@ Example:
 EOF
 }
 
-mkdir -p $BINDIR
-
-go build -o ${BINDIR}/goptuna_solver ${DIR}/goptuna_solver/main.go
-go build -o ${BINDIR}/himmelblau_problem ${DIR}/himmelblau_problem/main.go
-go build -o ${BINDIR}/rosenbrock_problem ${DIR}/rosenbrock_problem/main.go
-go build -o ${BINDIR}/rastrigin_problem ${DIR}/rastrigin_problem/main.go
-
 RANDOM_SOLVER=$($KUROBAKO solver random)
 
 case "$1" in
