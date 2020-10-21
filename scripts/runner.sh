@@ -38,25 +38,10 @@ Example:
 EOF
 }
 
-mkdir -p $BINDIR
-
-go build -o ${BINDIR}/goptuna_solver ${DIR}/goptuna_solver/main.go
-go build -o ${BINDIR}/himmelblau_problem ${DIR}/himmelblau_problem/main.go
-go build -o ${BINDIR}/rosenbrock_problem ${DIR}/rosenbrock_problem/main.go
-go build -o ${BINDIR}/rastrigin_problem ${DIR}/rastrigin_problem/main.go
-
 RANDOM_SOLVER=$($KUROBAKO solver random)
-CMA_SOLVER=$($KUROBAKO solver command ${BINDIR}/goptuna_solver cmaes)
-IPOP_CMA_SOLVER=$($KUROBAKO solver command ${BINDIR}/goptuna_solver ipop-cmaes)
-BIPOP_CMA_SOLVER=$($KUROBAKO solver command ${BINDIR}/goptuna_solver bipop-cmaes)
-TPE_SOLVER=$($KUROBAKO solver command ${BINDIR}/goptuna_solver tpe)
+
 
 OPTUNA_CMA_SOLVER=$($KUROBAKO solver --name Optuna-CMAES optuna --loglevel ${LOGLEVEL} --sampler CmaEsSampler)
-OPTUNA_TPE_SOLVER=$($KUROBAKO solver --name Optuna-TPE optuna --loglevel ${LOGLEVEL} --sampler TPESampler)
-OPTUNA_RANDOM_MEDIAN_SOLVER=$($KUROBAKO solver --name Optuna-RANDOM-MEDIAN optuna --loglevel ${LOGLEVEL} --sampler RandomSampler --pruner MedianPruner)
-OPTUNA_RANDOM_ASHA_SOLVER=$($KUROBAKO solver --name Optuna-RANDOM-ASHA optuna --loglevel ${LOGLEVEL} --sampler RandomSampler --pruner SuccessiveHalvingPruner)
-OPTUNA_TPE_MEDIAN_SOLVER=$($KUROBAKO solver --name Optuna-TPE-MEDIAN optuna --loglevel  ${LOGLEVEL} --sampler TPESampler --pruner MedianPruner)
-OPTUNA_TPE_ASHA_SOLVER=$($KUROBAKO solver --name Optuna-TPE-ASHA optuna --loglevel ${LOGLEVEL} --sampler TPESampler --pruner SuccessiveHalvingPruner)
 
 case "$1" in
     hpobench-*)
@@ -121,56 +106,8 @@ case $SOLVERS in
         $KUROBAKO studies \
           --solvers \
             $RANDOM_SOLVER \
-            $CMA_SOLVER \
-            $TPE_SOLVER \
-            $OPTUNA_CMA_SOLVER \
-            $OPTUNA_TPE_SOLVER \
-          --problems $PROBLEM \
           --seed $SEED --repeats $REPEATS --budget $BUDGET \
           | $KUROBAKO run --parallelism 7 > $2
-        ;;
-    cmaes)
-        $KUROBAKO studies \
-          --solvers \
-            $RANDOM_SOLVER \
-            $CMA_SOLVER \
-            $OPTUNA_CMA_SOLVER \
-          --problems $PROBLEM \
-          --seed $SEED --repeats $REPEATS --budget $BUDGET \
-          | $KUROBAKO run --parallelism 5 > $2
-        ;;
-    tpe)
-        $KUROBAKO studies \
-          --solvers \
-            $RANDOM_SOLVER \
-            $TPE_SOLVER \
-            $OPTUNA_TPE_SOLVER \
-          --problems $PROBLEM \
-          --seed $SEED --repeats $REPEATS --budget $BUDGET \
-          | $KUROBAKO run --parallelism 3 > $2
-        ;;
-    ipop)
-        $KUROBAKO studies \
-          --solvers \
-            $RANDOM_SOLVER \
-            $CMA_SOLVER \
-            $IPOP_CMA_SOLVER \
-            $BIPOP_CMA_SOLVER \
-          --problems $PROBLEM \
-          --seed $SEED --repeats $REPEATS --budget $BUDGET \
-          | $KUROBAKO run --parallelism 5 > $2
-        ;;
-    pruner)
-        $KUROBAKO studies \
-          --solvers \
-            $RANDOM_SOLVER \
-            $OPTUNA_RANDOM_MEDIAN_SOLVER \
-            $OPTUNA_RANDOM_ASHA_SOLVER \
-            $OPTUNA_TPE_MEDIAN_SOLVER \
-            $OPTUNA_TPE_ASHA_SOLVER \
-          --problems $PROBLEM \
-          --seed $SEED --repeats $REPEATS --budget $BUDGET \
-          | $KUROBAKO run --parallelism 3 > $2
         ;;
     *)
         echo "[Error] Invalid solver '${SOLVERS}'"

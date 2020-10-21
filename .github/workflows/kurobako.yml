@@ -65,7 +65,7 @@ jobs:
         name: hpobench-naval-report
         path: |
           report.md
-          images/**/*
+          images/**/*.png
 
     - name: cml_run
       env:
