@@ -54,7 +54,7 @@ jobs:
         ./kurobako studies --solvers $(cat solver.json) $(cat problem.json) | ./kurobako run > result.json
         cat result.json | ./kurobako report > result.md
         cat result.json | ./kurobako plot curve
-    - uses: actions/@upload-artifact@v2
+    - uses: actions/upload-artifact@v2
       with:
         name: hpobench-naval-report
         path: |
