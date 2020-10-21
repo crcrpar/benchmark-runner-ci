@@ -5,7 +5,7 @@ on:
   pull_request: {}
 
 jobs:
-  hpobench-naval:
+  hpobench-protein-structure:
 
     runs-on: ubuntu-18.04
     container: docker://dvcorg/cml-py3:latest
@@ -44,6 +44,19 @@ jobs:
       run: |
         wget http://ml4aad.org/wp-content/uploads/2019/01/fcnet_tabular_benchmarks.tar.gz
         tar xf fcnet_tabular_benchmarks.tar.gz
+
+    - name: Cache nasbench dataset
+      id: cache-nasbench-dataset
+      users: actions/cache@v2
+      with:
+        path: ./nasbench-full.bin
+        key: nasbench-dataset
+
+    - name: Download nasbench dataset
+      if: steps.cache-nasbench-dataset.outputs.cache-hit != 'true'
+      run: |
+        curl -L $(kurobako dataset nasbench url) -o nasbench_full.tfrecord
+        kurobako dataset nasbench convert nasbench_full.tfrecord nasbench_full.bin
 
     - name: Run Benchmark
       run: |
