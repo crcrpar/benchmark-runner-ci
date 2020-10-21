@@ -48,7 +48,7 @@ jobs:
     - name: Run Benchmark
       run: |
         ./kurobako solver random | tee solver.json
-        ./kurobako problem hpobench fcnet_protein_structure_data.hdf5 | tee problem.json
+        ./kurobako problem hpobench ./fcnet_tabular_benchmarks/fcnet_protein_structure_data.hdf5 | tee problem.json
         ./kurobako studies --solvers $(cat solver.json) --problems $(cat problem.json) | ./kurobako run > report.json
         cat report.json | ./kurobako report > report.md
         cat report.json | ./kurobako plot curve
