@@ -84,9 +84,9 @@ jobs:
       env:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        for file in `find images '*.png'`
+        for file in `find images -name '*.png'`
         do
           echo $file
-          cml-publish images/**/*.png --md >> report.md
+          cml-publish $file --md >> report.md
         done
         cml-send-comment report.md
