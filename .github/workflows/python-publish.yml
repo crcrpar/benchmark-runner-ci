@@ -49,8 +49,8 @@ jobs:
         tar xf ./tmp/fcnet_tabular_benchmarks.tar.gz -C ./tmp
     - name: Run Benchmark
       run: |
-        kurobako solver random | tee solver.json
-        kurobako problem hpobench ./fcnet_tabular_benchmarks/fcnet_naval_propulsion_data.hdf5 | tee problem.json
-        kurobako studies --solvers $(cat solver.json) $(cat problem.json) | kurobako run > result.json
-        cat result.json | kurobako report
-        cat result.json | kurobako plot curve
+        ./kurobako solver random | tee solver.json
+        ./kurobako problem hpobench ./fcnet_tabular_benchmarks/fcnet_naval_propulsion_data.hdf5 | tee problem.json
+        ./kurobako studies --solvers $(cat solver.json) $(cat problem.json) | ./kurobako run > result.json
+        cat result.json | ./kurobako report
+        cat result.json | ./kurobako plot curve
