@@ -63,12 +63,6 @@ jobs:
         path: |
           result.md
           images/**/*
-    - name: cml_run
-      env:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        cml-publish images/**/*.png --md >> report.md
-        cml-send-comment report.md
 
   post-report:
 
