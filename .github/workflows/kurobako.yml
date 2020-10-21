@@ -50,7 +50,7 @@ jobs:
         tar xf fcnet_tabular_benchmarks.tar.gz
     - name: Run Benchmark
       run: |
-        ./scripts/runner.sh all ./report.json
+        ./scripts/runner.sh random ./report.json
         cat result.json | ./kurobako report > result.md
         cat result.json | ./kurobako plot curve
     - uses: actions/upload-artifact@v2
