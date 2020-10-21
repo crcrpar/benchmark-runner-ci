@@ -72,6 +72,9 @@ jobs:
 
   post-report:
 
+    needs: [hpobench-naval]
+
+    runs-on: ubuntu-18.04
     container: docker://dvcorg/cml-py3:latest
 
     steps:
