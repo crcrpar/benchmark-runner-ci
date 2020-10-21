@@ -8,14 +8,13 @@ jobs:
   hpobench-naval:
 
     runs-on: ubuntu-18.04
-    container: docker://dvcorg/cml-py3:latest
 
     steps:
     - uses: actions/checkout@v2
-    # - name: Set up Python
-    #   uses: actions/setup-python@v2
-    #   with:
-    #     python-version: '3.8'
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
     - name: Install gnuplot
       run: |
         sudo apt update
@@ -58,6 +57,26 @@ jobs:
         path: |
           result.md
           images/**/*
+    - uses: actions/download-artifact@v2
+      with:
+        name: hpobench-naval-report
+        path: |
+          result.md
+          images/**/*
+    - name: cml_run
+      env:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        cml-publish images/**/*.png --md >> report.md
+        cml-send-comment report.md
+
+  post-report:
+
+    container: docker://dvcorg/cml-py3:latest
+
+    steps:
+    - uses: actions/checkout@v2
+
     - uses: actions/download-artifact@v2
       with:
         name: hpobench-naval-report
