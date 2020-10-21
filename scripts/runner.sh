@@ -2,7 +2,7 @@
 
 set -e
 
-KUROBAKO=${KUROBAKO:-kurobako}
+KUROBAKO=${KUROBAKO:-./kurobako}
 DIR=$(cd $(dirname $0); pwd)
 BINDIR=$(dirname $DIR)/bin
 TMPDIR=$(dirname $DIR)/tmp

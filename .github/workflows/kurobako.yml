@@ -29,6 +29,7 @@ jobs:
       with:
         path: ./kurobako
         key: kurobako-0-2-6
+        restore-keys: kurobako-0-2-6
     - name: Download kurobako CLI
       if: steps.cache-kurobako.outputs.cache-hit != 'true'
       run: |
@@ -41,8 +42,7 @@ jobs:
       with:
         path: ./fcnet_tabular_benchmarks
         key: hpobench-dataset
-        restore-keys: |
-          hpobench-dataset
+        restore-keys: hpobench-dataset
     - name: Download hpobench dataset
       if: steps.cache-hpobench-dataset.outputs.cache-hit != 'true'
       run: |
