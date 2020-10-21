@@ -55,8 +55,8 @@ jobs:
     - name: Download nasbench dataset
       if: steps.cache-nasbench-dataset.outputs.cache-hit != 'true'
       run: |
-        curl -L $(kurobako dataset nasbench url) -o nasbench_full.tfrecord
-        kurobako dataset nasbench convert nasbench_full.tfrecord nasbench_full.bin
+        curl -L $(./kurobako dataset nasbench url) -o nasbench_full.tfrecord
+        ./kurobako dataset nasbench convert nasbench_full.tfrecord nasbench_full.bin
 
     - name: Run Benchmark
       run: |
