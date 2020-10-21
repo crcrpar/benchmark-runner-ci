@@ -12,61 +12,68 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    # - name: Set up Python
-    #   uses: actions/setup-python@v2
-    #   with:
-    #     python-version: '3.8'
+
     - name: Install gnuplot
       run: |
         sudo apt update
         sudo apt -y install gnuplot
-    - name: Install Optuna
-      run: |
-        python -m pip install --upgrade pip
-        pip install -e .
+
     - name: Cache kurobako CLI
       id: cache-kurobako
       uses: actions/cache@v2
       with:
         path: ./kurobako
         key: kurobako-0-2-6
+
     - name: Download kurobako CLI
       if: steps.cache-kurobako.outputs.cache-hit != 'true'
       run: |
         curl -L https://github.com/sile/kurobako/releases/download/0.2.6/kurobako-0.2.6.linux-amd64 -o kurobako
         chmod +x kurobako
         ./kurobako -h
+
     - name: Cache hpobench dataset
       id: cache-hpobench-dataset
       uses: actions/cache@v2
       with:
         path: ./fcnet_tabular_benchmarks
         key: hpobench-dataset
+
     - name: Download hpobench dataset
       if: steps.cache-hpobench-dataset.outputs.cache-hit != 'true'
       run: |
         wget http://ml4aad.org/wp-content/uploads/2019/01/fcnet_tabular_benchmarks.tar.gz
         tar xf fcnet_tabular_benchmarks.tar.gz
+
     - name: Run Benchmark
       run: |
-        ./scripts/runner.sh hpobench-naval ./report.json
-        cat result.json | ./kurobako report > result.md
-        cat result.json | ./kurobako plot curve
+        ./kurobako solver random | tee.json
+        ./kurobako problem hpobench fcnet_protein_structure_data.hdf5 | tee problem.json
+        ./kurobako studies --solvers $(cat solver.json) --problems $(cat problem.json) | ./kurobako run > report.json
+        cat report.json | ./kurobako report > report.md
+        cat report.json | ./kurobako plot curve
+
     - uses: actions/upload-artifact@v2
       with:
         name: hpobench-naval-report
         path: |
-          result.md
+          report.md
           images/**/*
+
     - uses: actions/download-artifact@v2
       with:
         name: hpobench-naval-report
         path: |
-          result.md
+          report.md
           images/**/*
+
     - name: cml_run
       env:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        cml-publish images/**/*.png --md >> report.md
+        for file in `find images '*.png'`
+        do
+          echo $file
+          cml-publish images/**/*.png --md >> report.md
+        done
         cml-send-comment report.md
