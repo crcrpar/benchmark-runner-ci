@@ -40,7 +40,7 @@ jobs:
       id: cache-hpobench-dataset
       uses: actions/cache@v2
       with:
-        path: ./fcnet_tabular_benchmarks
+        path: fcnet_tabular_benchmarks.tar.gz
         key: hpobench-dataset
         restore-keys: hpobench-dataset
     - name: Download hpobench dataset
@@ -50,7 +50,7 @@ jobs:
         tar xf fcnet_tabular_benchmarks.tar.gz
     - name: Run Benchmark
       run: |
-        ./scripts/runner.sh hpobench-naval ./report.json
+        ./scripts/runner.sh all ./report.json
         cat result.json | ./kurobako report > result.md
         cat result.json | ./kurobako plot curve
     - uses: actions/upload-artifact@v2
